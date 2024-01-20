@@ -11,7 +11,7 @@ type Data struct {
 	Payload string
 }
 
-// Simple cache implementation. This cache may load the sema element
+// Simple cache implementation. This cache may load the same element
 // multiple times. You may get a different number of cache misses
 // every time you run it
 type Cache struct {
@@ -42,6 +42,7 @@ func (c *Cache) Get(ID string) (Data, bool) {
 		}
 		return *data, true
 	}
+
 	data, loaded := retrieveData(ID)
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -49,6 +50,7 @@ func (c *Cache) Get(ID string) (Data, bool) {
 	if exists {
 		return *d, true
 	}
+
 	if !loaded {
 		c.m[ID] = nil
 		return Data{}, false
