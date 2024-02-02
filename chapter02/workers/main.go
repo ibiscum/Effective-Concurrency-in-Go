@@ -38,7 +38,9 @@ func main() {
 			}
 		}()
 	}
+
 	results := make([]Result, 0)
+
 	go func() {
 		// Collect all the results.
 		for i := 0; i < len(workQueue); i++ {
@@ -47,10 +49,12 @@ func main() {
 		// When all the results are collected, notify the done channel
 		done <- true
 	}()
+
 	// Send all the work to the workers
 	for _, work := range workQueue {
 		workCh <- work
 	}
+
 	// Wait until everything is done
 	<-done
 	fmt.Println(results)
