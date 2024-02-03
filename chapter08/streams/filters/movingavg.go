@@ -1,7 +1,7 @@
 package filters
 
 import (
-	"streams/store"
+	"github.com/ibiscum/Effective-Concurrency-in-Go/chapter08/streams/store"
 )
 
 type AboveThresholdEntry struct {

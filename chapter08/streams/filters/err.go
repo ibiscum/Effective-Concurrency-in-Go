@@ -1,7 +1,7 @@
 package filters
 
 import (
-	"github.com/ibiscum/Effective-Concurrency-in-Go/streams/store"
+	"github.com/ibiscum/Effective-Concurrency-in-Go/chapter08/streams/store"
 )
 
 func ErrFilter(in <-chan store.Entry) (<-chan store.Entry, <-chan error) {

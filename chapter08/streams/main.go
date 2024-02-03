@@ -15,8 +15,9 @@ import (
 
 	_ "modernc.org/sqlite"
 
-	"streams/filters"
-	"streams/store"
+	"github.com/ibiscum/Effective-Concurrency-in-Go/chapter08/streams/store"
+
+	"github.com/ibiscum/Effective-Concurrency-in-Go/chapter08/streams/filters"
 )
 
 func initDB(dbName string) {

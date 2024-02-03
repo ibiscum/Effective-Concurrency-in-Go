@@ -1,7 +1,7 @@
 package filters
 
 import (
-	"streams/store"
+	"github.com/ibiscum/Effective-Concurrency-in-Go/chapter08/streams/store"
 )
 
 func MinFilter(min float64, in <-chan store.Entry) <-chan store.Entry {
