@@ -30,6 +30,7 @@ func main() {
 	sharedValue.Store(&SomeStruct{})
 	wg := sync.WaitGroup{}
 	for i := 0; i < 100000; i++ {
+		i := i
 		wg.Add(1)
 		go func() {
 			defer wg.Done()

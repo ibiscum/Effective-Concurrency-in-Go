@@ -22,6 +22,7 @@ func main() {
 	cancel, isCanceled := CancelSupport()
 	wg := sync.WaitGroup{}
 	wg.Add(1)
+
 	go func() {
 		defer wg.Done()
 		for {
@@ -32,6 +33,7 @@ func main() {
 			}
 		}
 	}()
+
 	time.AfterFunc(5*time.Second, cancel)
 	wg.Wait()
 }

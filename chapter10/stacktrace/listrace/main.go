@@ -11,6 +11,7 @@ func main() {
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 	ll := list.New()
+
 	// Goroutine that fills the list
 	go func() {
 		defer wg.Done()
@@ -18,6 +19,7 @@ func main() {
 			ll.PushBack(rand.Int())
 		}
 	}()
+
 	// Goroutine that empties the list
 	go func() {
 		defer wg.Done()

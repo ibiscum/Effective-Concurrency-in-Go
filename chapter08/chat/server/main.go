@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/net/websocket"
 
-	"chat"
+	"github.com/ibiscum/Effective-Concurrency-in-Go/chapter08/chat"
 )
 
 func main() {
