@@ -6,6 +6,7 @@ use (
 	./chapter05
 	./chapter07
 	./chapter08
+    ./chapter08/streams
 	./chapter09
 	./chapter10
 )
