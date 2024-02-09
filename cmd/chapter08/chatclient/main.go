@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ibiscum/Effective-Concurrency-in-Go/internal/chat"
+
 	"golang.org/x/net/websocket"
 )
 

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"golang.org/x/net/websocket"
+	"github.com/ibiscum/Effective-Concurrency-in-Go/internal/chat"
 
-	"github.com/ibiscum/Effective-Concurrency-in-Go/chapter08/chat"
+	"golang.org/x/net/websocket"
 )
 
 func main() {
