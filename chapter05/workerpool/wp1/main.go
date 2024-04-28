@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -46,11 +47,11 @@ func main() {
 		}()
 	}
 	var err error
-	rex, err := regexp.Compile(os.Args[2])
+	rex, err := regexp.Compile(os.Args[1])
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
-	filepath.Walk(os.Args[1], func(path string, d fs.FileInfo, err error) error {
+	err = filepath.Walk(os.Args[1], func(path string, d fs.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -59,6 +60,9 @@ func main() {
 		}
 		return nil
 	})
+	if err != nil {
+		log.Panic(err)
+	}
 	close(jobs)
 	wg.Wait()
 }
