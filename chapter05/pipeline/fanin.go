@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"log"
 	"sync"
 )
 
@@ -80,7 +81,10 @@ func fanOutFanIn(input *csv.Reader) {
 	}()
 
 	// Ignore the first row
-	input.Read()
+	_, err := input.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
 	for {
 		rec, err := input.Read()
 		if err == io.EOF {

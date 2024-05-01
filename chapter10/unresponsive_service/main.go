@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"runtime/pprof"
@@ -135,7 +136,10 @@ func main() {
 	go func() {
 		select {
 		case <-mon.Alert:
-			pprof.Lookup("goroutine").WriteTo(os.Stderr, 1)
+			err := pprof.Lookup("goroutine").WriteTo(os.Stderr, 1)
+			if err != nil {
+				log.Fatal(err)
+			}
 		case <-mon.Done:
 			return
 		}

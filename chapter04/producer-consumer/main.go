@@ -33,7 +33,7 @@ func consumer(index int, wg *sync.WaitGroup, input <-chan int) {
 
 func main() {
 	doneCh := make(chan struct{})
-	dataCh := make(chan int, 0)
+	dataCh := make(chan int)
 	producers := sync.WaitGroup{}
 	consumers := sync.WaitGroup{}
 	for i := 0; i < 10; i++ {

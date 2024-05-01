@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"log"
 	"sync"
 )
 
@@ -96,6 +97,7 @@ func orderedFanIn[T sequenced](done <-chan struct{}, channels ...<-chan T) <-cha
 	}()
 	return outputCh
 }
+
 func orderedFanOutFanIn(input *csv.Reader) {
 	fmt.Println("--Ordered Fan-Out - Fan-In----")
 
@@ -123,7 +125,10 @@ func orderedFanOutFanIn(input *csv.Reader) {
 	}()
 
 	// Ignore the first row
-	input.Read()
+	_, err := input.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
 	for {
 		rec, err := input.Read()
 		if err == io.EOF {

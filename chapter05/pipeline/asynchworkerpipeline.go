@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"log"
 	"sync"
 )
 
@@ -51,7 +52,10 @@ func asynchronousPipeline2Workers(input *csv.Reader) {
 	}()
 
 	// Ignore the first row
-	input.Read()
+	_, err := input.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
 	for {
 		rec, err := input.Read()
 		if err == io.EOF {

@@ -43,7 +43,7 @@ func (s *Limiter) Wait() {
 	// We have to wait until more tokens are available
 	// A token should be available at:
 	next := s.lastToken.Add(period)
-	wait := next.Sub(time.Now())
+	wait := time.Until(next)
 	if wait >= 0 {
 		time.Sleep(wait)
 	}

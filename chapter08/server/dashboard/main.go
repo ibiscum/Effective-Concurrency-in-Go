@@ -118,7 +118,10 @@ func (svc *DashboardService) DashboardHandler(w http.ResponseWriter, req *http.R
 	switch req.Method {
 	case http.MethodGet:
 		dashboard := svc.GetDashboardData(req.Context(), userId)
-		json.NewEncoder(w).Encode(dashboard)
+		err := json.NewEncoder(w).Encode(dashboard)
+		if err != nil {
+			log.Fatal(err)
+		}
 	case http.MethodPost:
 		var params DashboardParams
 		if err := json.NewDecoder(req.Body).Decode(&params); err != nil {
@@ -173,5 +176,8 @@ func main() {
 	mux := http.NewServeMux()
 	svc := NewDashboardService()
 	mux.HandleFunc("/dashboard/", ConcurrencyLimiter(make(chan struct{}, 20), svc.DashboardHandler))
-	http.ListenAndServe("localhost:10001", mux)
+	err := http.ListenAndServe("localhost:10001", mux)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

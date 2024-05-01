@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -65,7 +66,10 @@ func main() {
 	go func() {
 		<-sig
 		fmt.Println("Terminating on signal")
-		srv.StopListener()
+		err := srv.StopListener()
+		if err != nil {
+			log.Panic(err)
+		}
 		srv.WaitForConnections(5 * time.Second)
 	}()
 
@@ -79,9 +83,15 @@ func main() {
 		defer fmt.Println("Connection closed")
 		fmt.Println("Handling connection")
 		// Echo server
-		io.Copy(conn, conn)
+		_, err = io.Copy(conn, conn)
+		if err != nil {
+			log.Panic(err)
+		}
 	}
-	srv.Listen()
+	err = srv.Listen()
+	if err != nil {
+		log.Panic(err)
+	}
 
 	fmt.Println("Waiting for connections to terminate")
 	srv.WaitForConnections(5 * time.Second)

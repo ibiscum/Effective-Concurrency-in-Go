@@ -1,17 +1,15 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"math/rand"
 	"net/http"
 	"time"
-
-	"golang.org/x/net/websocket"
 
 	_ "modernc.org/sqlite"
 
@@ -44,7 +42,10 @@ func initDB(dbName string) {
 	if err := result.Scan(&nItems); err != nil {
 		panic(err)
 	}
-	tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		log.Fatal(err)
+	}
 	if nItems < 10000 {
 		tx, err := db.Begin()
 		if err != nil {
@@ -62,48 +63,51 @@ func initDB(dbName string) {
 			}
 			tm -= 100
 		}
-		tx.Commit()
-	}
-}
-
-func simpleMain() {
-	initDB("test.db")
-	// Start database
-	db, err := sql.Open("sqlite", "test.db")
-	if err != nil {
-		panic(err)
-	}
-
-	// Create the store
-	st := store.Store{DB: db}
-
-	// Stream results
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	entries, err := st.Stream(ctx, store.Request{})
-	if err != nil {
-		panic(err)
-	}
-	filteredEntries := filters.MinFilter(0.001, entries)
-	entryCh, errCh := filters.ErrFilter(filteredEntries)
-	resultCh := filters.MovingAvg(0.5, 5, entryCh)
-	var streamErr error
-	go func() {
-		for err := range errCh {
-			// Capture first error
-			if streamErr == nil {
-				streamErr = err
-				cancel()
-			}
+		err = tx.Commit()
+		if err != nil {
+			log.Fatal(err)
 		}
-	}()
-	for entry := range resultCh {
-		fmt.Printf("%+v\n", entry)
-	}
-	if streamErr != nil {
-		fmt.Println(streamErr)
 	}
 }
+
+// func simpleMain() {
+// 	initDB("test.db")
+// 	// Start database
+// 	db, err := sql.Open("sqlite", "test.db")
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	// Create the store
+// 	st := store.Store{DB: db}
+
+// 	// Stream results
+// 	ctx, cancel := context.WithCancel(context.Background())
+// 	defer cancel()
+// 	entries, err := st.Stream(ctx, store.Request{})
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	filteredEntries := filters.MinFilter(0.001, entries)
+// 	entryCh, errCh := filters.ErrFilter(filteredEntries)
+// 	resultCh := filters.MovingAvg(0.5, 5, entryCh)
+// 	var streamErr error
+// 	go func() {
+// 		for err := range errCh {
+// 			// Capture first error
+// 			if streamErr == nil {
+// 				streamErr = err
+// 				cancel()
+// 			}
+// 		}
+// 	}()
+// 	for entry := range resultCh {
+// 		fmt.Printf("%+v\n", entry)
+// 	}
+// 	if streamErr != nil {
+// 		fmt.Println(streamErr)
+// 	}
+// }
 
 type Message struct {
 	At    time.Time `json:"at"`
@@ -152,89 +156,89 @@ func EncodeFromChan[T any](input <-chan T, encode func(T) ([]byte, error), out i
 	return ret
 }
 
-func wsMain() {
-	initDB("test.db")
-	// Start database
-	db, err := sql.Open("sqlite", "test.db")
-	if err != nil {
-		panic(err)
-	}
+// func wsMain() {
+// 	initDB("test.db")
+// 	// Start database
+// 	db, err := sql.Open("sqlite", "test.db")
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	// Create the store
-	st := store.Store{DB: db}
+// 	// Create the store
+// 	st := store.Store{DB: db}
 
-	// Create a websocket server
-	http.Handle("/db", websocket.Handler(func(conn *websocket.Conn) {
-		data, err := st.Stream(conn.Request().Context(), store.Request{})
-		if err != nil {
-			fmt.Println("Store error", err)
-			if err != nil {
-				return
-			}
-		}
+// 	// Create a websocket server
+// 	http.Handle("/db", websocket.Handler(func(conn *websocket.Conn) {
+// 		data, err := st.Stream(conn.Request().Context(), store.Request{})
+// 		if err != nil {
+// 			fmt.Println("Store error", err)
+// 			if err != nil {
+// 				return
+// 			}
+// 		}
 
-		errCh := EncodeFromChan(data, func(entry store.Entry) ([]byte, error) {
-			msg := Message{
-				At:    entry.At,
-				Value: entry.Value,
-			}
-			if entry.Error != nil {
-				msg.Error = entry.Error.Error()
-			}
-			return json.Marshal(msg)
-		}, conn)
-		err = <-errCh
-		if err != nil {
-			fmt.Println("Encode error", err)
-		}
-	}))
-	go func() {
-		fmt.Println("Server started at :10001")
-		if err := http.ListenAndServe(":10001", nil); err != nil {
-			panic(err)
-		}
-	}()
+// 		errCh := EncodeFromChan(data, func(entry store.Entry) ([]byte, error) {
+// 			msg := Message{
+// 				At:    entry.At,
+// 				Value: entry.Value,
+// 			}
+// 			if entry.Error != nil {
+// 				msg.Error = entry.Error.Error()
+// 			}
+// 			return json.Marshal(msg)
+// 		}, conn)
+// 		err = <-errCh
+// 		if err != nil {
+// 			fmt.Println("Encode error", err)
+// 		}
+// 	}))
+// 	go func() {
+// 		fmt.Println("Server started at :10001")
+// 		if err := http.ListenAndServe(":10001", nil); err != nil {
+// 			panic(err)
+// 		}
+// 	}()
 
-	// Create a client
-	cli, err := websocket.Dial("ws://localhost:10001/db", "", "http://localhost:10001")
-	if err != nil {
-		panic(err)
-	}
-	//ctx, cancel := context.WithCancel(context.Background())
-	//defer cancel()
+// 	// Create a client
+// 	cli, err := websocket.Dial("ws://localhost:10001/db", "", "http://localhost:10001")
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	//ctx, cancel := context.WithCancel(context.Background())
+// 	//defer cancel()
 
-	decoder := json.NewDecoder(cli)
-	entries, rcvErr := DecodeToChan[store.Entry](func(entry *store.Entry) error {
-		var msg Message
-		if err := decoder.Decode(&msg); err != nil {
-			return err
-		}
-		entry.At = msg.At
-		entry.Value = msg.Value
-		if msg.Error != "" {
-			entry.Error = fmt.Errorf(msg.Error)
-		}
+// 	decoder := json.NewDecoder(cli)
+// 	entries, rcvErr := DecodeToChan[store.Entry](func(entry *store.Entry) error {
+// 		var msg Message
+// 		if err := decoder.Decode(&msg); err != nil {
+// 			return err
+// 		}
+// 		entry.At = msg.At
+// 		entry.Value = msg.Value
+// 		if msg.Error != "" {
+// 			entry.Error = fmt.Errorf(msg.Error)
+// 		}
 
-		return nil
-	})
+// 		return nil
+// 	})
 
-	filteredEntries := filters.MinFilter(0.001, entries)
-	entryCh, errCh := filters.ErrFilter(filteredEntries)
-	resultCh := filters.MovingAvg(0.5, 5, entryCh)
+// 	filteredEntries := filters.MinFilter(0.001, entries)
+// 	entryCh, errCh := filters.ErrFilter(filteredEntries)
+// 	resultCh := filters.MovingAvg(0.5, 5, entryCh)
 
-	go func() {
-		for err := range errCh {
-			fmt.Println("Stream error", err)
-		}
-	}()
-	for entry := range resultCh {
-		fmt.Printf("%+v\n", entry)
-	}
-	err = <-rcvErr
-	if err != nil {
-		fmt.Println("Receive error", err)
-	}
-}
+// 	go func() {
+// 		for err := range errCh {
+// 			fmt.Println("Stream error", err)
+// 		}
+// 	}()
+// 	for entry := range resultCh {
+// 		fmt.Printf("%+v\n", entry)
+// 	}
+// 	err = <-rcvErr
+// 	if err != nil {
+// 		fmt.Println("Receive error", err)
+// 	}
+// }
 
 func httpMain() {
 	initDB("test.db")
@@ -251,10 +255,7 @@ func httpMain() {
 	http.HandleFunc("/db", func(w http.ResponseWriter, req *http.Request) {
 		data, err := st.Stream(req.Context(), store.Request{})
 		if err != nil {
-			fmt.Println("Store error", err)
-			if err != nil {
-				return
-			}
+			log.Println("Store error", err)
 		}
 
 		errCh := EncodeFromChan(data, func(entry store.Entry) ([]byte, error) {
@@ -320,7 +321,7 @@ func httpMain() {
 
 func main() {
 	// Uncomment one of the implementations below, and comment out the others
-	//simpleMain()
+	// simpleMain()
 	//wsMain()
 	httpMain()
 }

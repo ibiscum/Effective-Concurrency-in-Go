@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"log"
 )
 
 func pipelineStage[IN any, OUT any](input <-chan IN, output chan<- OUT, process func(IN) OUT) {
@@ -38,7 +39,10 @@ func asynchronousPipeline(input *csv.Reader) {
 	}()
 
 	// Ignore the first row
-	input.Read()
+	_, err := input.Read()
+	if err != nil {
+		log.Panic(err)
+	}
 	for {
 		rec, err := input.Read()
 		if err == io.EOF {

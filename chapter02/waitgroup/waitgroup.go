@@ -39,5 +39,5 @@ func (wg *WaitGroup) Done() {
 
 func (wg *WaitGroup) Wait() {
 	wg.lock.Lock()
-	wg.lock.Unlock()
+	defer wg.lock.Unlock()
 }

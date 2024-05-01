@@ -8,8 +8,9 @@ func philosopher(firstFork, secondFork *sync.Mutex) {
 	for {
 		firstFork.Lock()
 		secondFork.Lock()
-		secondFork.Unlock()
+		// secondFork.Unlock()
 		firstFork.Unlock()
+		secondFork.Unlock()
 	}
 }
 
