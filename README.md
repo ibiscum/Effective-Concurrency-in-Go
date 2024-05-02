@@ -1,5 +1,7 @@
 # Effective Concurrency in Go
 
+[![lint](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/lint.yml/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/lint.yml)
+
 <a href="https://www.amazon.com/dp/1804619078"><img src="https://m.media-amazon.com/images/I/41EwupchvML._SX260_.jpg" alt="Effective Concurrency in Go" height="256px" align="right"></a>
 
 This is the code repository for [Effective Concurrency in Go](https://www.amazon.com/dp/1804619078), published by Packt.
@@ -26,15 +28,15 @@ All of the code is organized into folders. For example, Chapter02.
 
 The code will look like the following:
 ```
-1: chn := make(chan bool) // Create an unbuffered channel 
-2: go func() { 
-3: chn <- true // Send to channel 
-4: }() 
-5: go func() { 
-6: var y bool 
-7: y <-chn // Receive from channel 
-8: fmt.Println(y) 
-9: }() 
+1: chn := make(chan bool) // Create an unbuffered channel
+2: go func() {
+3: chn <- true // Send to channel
+4: }()
+5: go func() {
+6: var y bool
+7: y <-chn // Receive from channel
+8: fmt.Println(y)
+9: }()
 ```
 
 **Following is what you need for this book:**
