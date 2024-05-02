@@ -9,18 +9,19 @@ import (
 func philosopher(index int, leftFork, rightFork chan bool) {
 	for {
 		// Think for some time
-		fmt.Printf("Philospher %d is thinking\n", index)
+		fmt.Printf("Philosopher %d is thinking\n", index)
 		time.Sleep(time.Millisecond * time.Duration(rand.Intn(1000)))
 		select {
 		case <-leftFork:
+			leftFork <- true
 			select {
 			case <-rightFork:
+				rightFork <- true
 				fmt.Printf("Philosopher %d is eating\n", index)
 				time.Sleep(time.Millisecond * time.Duration(rand.Intn(1000)))
-				rightFork <- true
 			default:
 			}
-			leftFork <- true
+		default:
 		}
 	}
 }
