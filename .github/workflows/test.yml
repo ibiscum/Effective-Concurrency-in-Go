@@ -5,9 +5,9 @@ name: test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 env: 
   TEST_NO_CI: true
 
@@ -23,15 +23,5 @@ jobs:
       with:
         go-version: '1.20'
     
-    - name: Redis Server in GitHub Actions
-      uses: supercharge/redis-github-action@1.8.0
-      with:
-        redis-version: 7
-
-    - name: MongoDB in Github Actions
-      uses: MongoCamp/mongodb-github-action@1.2.0
-      with:
-        mongodb-version: 7.0.5
-    
     - name: Test
-      run: go test -v ./...
+      run: go test -v -race ./...
