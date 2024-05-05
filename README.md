@@ -1,6 +1,7 @@
 # Effective Concurrency in Go
-
+[![build](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/build.yml/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/build.yml)
 [![lint](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/lint.yml/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/lint.yml)
+[![test](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/test.yml/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/test.yml)
 
 <a href="https://www.amazon.com/dp/1804619078"><img src="https://m.media-amazon.com/images/I/41EwupchvML._SX260_.jpg" alt="Effective Concurrency in Go" height="256px" align="right"></a>
 
