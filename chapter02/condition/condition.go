@@ -88,6 +88,7 @@ func main() {
 			fmt.Println(v)
 		}
 	}
+
 	for i := 0; i < 10; i++ {
 		go producer()
 	}

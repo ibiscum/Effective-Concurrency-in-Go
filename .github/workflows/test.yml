@@ -1,0 +1,37 @@
+# This workflow will test a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+env: 
+  TEST_NO_CI: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.20'
+    
+    - name: Redis Server in GitHub Actions
+      uses: supercharge/redis-github-action@1.8.0
+      with:
+        redis-version: 7
+
+    - name: MongoDB in Github Actions
+      uses: MongoCamp/mongodb-github-action@1.2.0
+      with:
+        mongodb-version: 7.0.5
+    
+    - name: Test
+      run: go test -v ./...
