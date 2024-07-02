@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"time"
 )
 
 var mutex sync.Mutex
@@ -30,4 +31,7 @@ func main() {
 			os.Exit(2)
 		}
 	}()
+
+	time.Sleep(2 * time.Second)
+
 }

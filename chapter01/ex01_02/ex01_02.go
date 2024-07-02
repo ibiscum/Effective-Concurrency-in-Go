@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 )
 
 type Account struct {
@@ -39,4 +40,7 @@ func main() {
 			log.Println("go 2: ", acct.Balance)
 		}
 	}() // Goroutine 2
+
+	time.Sleep(2 * time.Second)
+
 }
