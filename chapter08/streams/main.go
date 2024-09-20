@@ -295,7 +295,7 @@ func httpMain() {
 		entry.At = msg.At
 		entry.Value = msg.Value
 		if msg.Error != "" {
-			entry.Error = fmt.Errorf(msg.Error)
+			entry.Error = fmt.Errorf("%v", msg.Error)
 		}
 
 		return nil
