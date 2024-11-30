@@ -1,4 +1,6 @@
 # Effective Concurrency in Go
+[![Dependabot Updates](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/dependabot/dependabot-updates)
+[![codeql](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/codeql.yml/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/codeql.yml)
 [![build](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/build.yml/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/build.yml)
 [![lint](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/lint.yml/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/lint.yml)
 [![test](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/test.yml/badge.svg)](https://github.com/ibiscum/Effective-Concurrency-in-Go/actions/workflows/test.yml)
