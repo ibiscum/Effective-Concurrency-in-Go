@@ -42,5 +42,4 @@ func main() {
 	}() // Goroutine 2
 
 	time.Sleep(2 * time.Second)
-
 }
